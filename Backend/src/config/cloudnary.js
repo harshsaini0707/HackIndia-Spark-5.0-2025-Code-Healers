@@ -8,4 +8,4 @@ const connectCloudinary = async () => {
     api_secret: process.env.CLOUDNIARY_SECRET_KEY,
   });
 };
-module.exports = {connectCloudinary};
+module.exports = {connectCloudinary}; 
