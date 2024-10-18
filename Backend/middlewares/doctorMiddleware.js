@@ -10,7 +10,7 @@ const doctorAuthMiddleware =  async(req,res,next)=>{
     const verify =  await jwt.verify(token ,process.env.JWT_SECRET_KEY)
     if(!verify) return res.status(400).json({message : "Token not valid!!"});
 
-    const {id} = verify._id;
+    const id = verify.id;
     const doctor =  await DoctorModel.findById(id);
     req.doctor  =  doctor;
     next();

@@ -59,7 +59,7 @@ doctorRouter.get("/doctor/appointments",doctorAuthMiddleware , async (req , res)
         
         const doctor =  req.doctor;
         const id = doctor._id;
-        const appointments =  await appointmentModel.findById(id);
+       const appointments = await appointmentModel.find({ docId: id });
         if(!appointments) return res.json({message: "Till Now No Appointments Booked For You!!"})
         return res.json({message : "Your Appointments" ,  appointments})
 
@@ -70,31 +70,36 @@ doctorRouter.get("/doctor/appointments",doctorAuthMiddleware , async (req , res)
 }
 )
 
-doctorRouter.post("/doctor/appointmentDone" ,  doctorAuthMiddleware ,  async(req, res)=>{
+doctorRouter.post("/doctor/appointmentDone", doctorAuthMiddleware, async (req, res) => {
     try {
         const docId = req.doctor._id;
-        const appointmentId =  req.body;
-        const appointment =  await appointmentModel.findById(appointmentId);
-        if(appointment && appointment.docId === docId){
-            appointment.isCompleted =  true;
-            await appointment.save();
-        } else{
-            return res.json({message : "Invalid Appointment"})
+        const { appointmentId } = req.body; 
+        if (!appointmentId) {
+            return res.status(400).json({ message: "Appointment ID is required." });
         }
-        return res.json({message : "Appointment Done!!"})
 
+        const appointment = await appointmentModel.findById(appointmentId);
         
+        if (appointment && appointment.docId.toString() === docId.toString()) {
+            appointment.isCompleted = true; 
+            await appointment.save(); 
+            return res.json({ message: "Appointment Done!" });
+        } else {
+            return res.status(404).json({ message: "Invalid Appointment" });
+        }
+
     } catch (error) {
-        return res.status(400).json({Error : error.message}) 
+        return res.status(400).json({ Error: error.message });
     }
-})
+});
+
 
 doctorRouter.post("/doctor/appointmentCancel" , doctorAuthMiddleware ,  async (req, res)=>{
     try {
         const docId = req.doctor._id;
-        const appointmentId =  req.body;
+        const {appointmentId} =  req.body;
         const appointment =  await appointmentModel.findById(appointmentId);
-        if(appointment && appointment.docId === docId){
+        if(appointment && appointment.docId.toString() === docId.toString()){
             appointment.cancelled =  true;
             await appointment.save();
         } else{
@@ -107,37 +112,37 @@ doctorRouter.post("/doctor/appointmentCancel" , doctorAuthMiddleware ,  async (r
     }
 })
 
-doctorRouter.get("/doctor/dashBoard" , doctorAuthMiddleware ,  async(req, res) =>{
+doctorRouter.get("/doctor/dashBoard", doctorAuthMiddleware, async (req, res) => {
     try {
         const docId = req.doctor._id;
-        const appointment =  await appointmentModel.findById(docId);
+       
+        const appointments = await appointmentModel.find({ docId });
+
         let earnings = 0;
+        let patient = new Set(); 
 
-        appointment.map((item) =>{
-            if(item.isCompleted || item.payment){
-             earnings +=item.amount;
+        
+        appointments.forEach(item => {
+            if (item.isCompleted || item.payment) {
+                earnings += item.amount;
             }
-        })
-        let patient = [];
-        appointment.map((item)=>{
-            if(!patient.includes(item._id)){
-                patient.push(item._id)
-            }
-        })
-        const dashData ={
+            patient.add(item.patientId);
+        });
+
+        
+        const dashData = {
             earnings,
-            appointment : appointment.length,
-            patient : patient.length,
-            latestAppointments : appointment.reverse().slice(0,5)
+            appointment: appointments.length,
+            patient: patient.size, 
+            latestAppointments: appointments.reverse().slice(0, 5)
+        };
 
-        }
-        return res.json({dashData});
+        return res.json({ dashData });
 
     } catch (error) {
-        return res.json({ERROR : error.message})
-   
+        return res.status(500).json({ ERROR: error.message }); 
     }
-})
+});
 
 doctorRouter.get("/doctor/profile" ,  doctorAuthMiddleware , async(req ,res)=>{
     try {

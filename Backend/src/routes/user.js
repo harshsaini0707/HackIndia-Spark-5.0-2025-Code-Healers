@@ -117,18 +117,17 @@ userRouter.patch("/user/editPassword" , userAuthMiddlware , async (req, res)=>{
     }
 })
 
-//ADD in PostMan
 userRouter.post("/user/bookAppointment", userAuthMiddlware,async (req,res)=>{
   try {
     const loggedInUser = req.user;
-    const Id = loggedInUser._id;
+    const userId = loggedInUser._id;
     const{docId , slotDate , slotTime} = req.body;
     
     const docData = await DoctorModel.findById(docId).select("-password");
     if(!docData.available){
      return res.json({message : "Doctor Not Available!!"})
     }else{
-     let slots_booked = docData.slots_booked;
+        var slots_booked = docData.slots_booked || {};
  
      //check if slot is available or not
      if(slots_booked[slotDate]){
@@ -144,17 +143,17 @@ userRouter.post("/user/bookAppointment", userAuthMiddlware,async (req,res)=>{
          slots_booked[slotDate].push(slotTime);
       }
     }
-    const user = await UserModel.findById(Id).select("-password");
+    const user = await UserModel.findById(userId).select("-password");
     //delete slotbook data in doctor
     //we donot want the slot book of doctor data
 
     delete docData.slots_booked;
     const appointmentData = {
-        Id, docId , user , docData , amount :docData.fees , date : Date.now() , slotDate , slotTime  
+        userId, docId , user , docData , amount :docData.fees , date : Date.now() , slotDate , slotTime  
     }
 
     const newAppointment  = new appointmentModel(appointmentData);
-    await appointmentData.save();
+    await newAppointment.save();
 
     //save new slots data in docData
     await DoctorModel.findById(docId , {slots_booked})
@@ -165,51 +164,69 @@ userRouter.post("/user/bookAppointment", userAuthMiddlware,async (req,res)=>{
   }
 })
 
-userRouter.get("/user/appointment", userAuthMiddlware,  async (req,res) =>{
+userRouter.get("/user/appointment", userAuthMiddlware, async (req, res) => {
     try {
-        
-        const user = req.user;
-        const id = user._id;
-        const loggedInUser =  await appointmentModel.findById(id);
-        if(!loggedInUser) return res.status(404).json({message :"User Don't have any Appointment!!"})
-        
-        return res.status(200).json({message :"Appointment of"+loggedInUser.firstName  , loggedInUser})
-    } catch (error) {
-        return res.status(400).json({Error : error.message})
-    }
-})
+        const user = req.user; 
+        const userId = user._id; 
 
-userRouter.patch("/user/cancelAppointment/:appointmentId" ,userAuthMiddlware, async(req,res) =>{
-    try {
-        const loggedInUser =  req.user;
-        const id = loggedInUser._id;
-        const appointmentId =  req.params.appointmentId;
-        const appointmentData =  await appointmentModel.findById(appointmentId);
+        const appointments = await appointmentModel.find({ userId: userId});
 
-        //verify appointment user
-        if(appointmentData.userId != id){
-            return res.status(404).json({message :"User Don't have any Appointment!!"}) 
-        }else{
-       await appointmentModel.findByIdAndUpdate(appointmentId , {cancelled : true})
-    
-       
-       // release the doctor slot
-       const {docId , slotDate , slotTime} = appointmentData;
-       const docData = await DoctorModel.findById(docId);
-       let slots_booked = docData.slots_booked;
-       slots_booked[slotDate] = slots_booked[slotDate].filter( e => e !== slotTime )
-
-       await DoctorModel.findByIdAndUpdate(docId , {slots_booked})
-
-       return res.json({message : "Appontment Cancelled!!"})
+        if (appointments.length === 0) {
+            return res.status(404).json({ message: "User doesn't have any appointments!" });
         }
 
-
-        
+        return res.status(200).json({
+            message: "Appointments for " + user.firstName, 
+            appointments
+        });
     } catch (error) {
-        return res.status(400).json({Error : error.message})
+        return res.status(400).json({ Error: error.message });
     }
-})
+});
+
+
+userRouter.patch("/user/cancelAppointment/:appointmentId", userAuthMiddlware, async (req, res) => {
+    try {
+        const loggedInUser = req.user;
+        const userId = loggedInUser._id.toString(); 
+        const appointmentId = req.params.appointmentId;
+
+
+        const appointmentData = await appointmentModel.findById(appointmentId);
+        if (!appointmentData) {
+            return res.status(404).json({ message: "Appointment not found!" });
+        }
+
+        if (appointmentData.userId.toString() !== userId) { 
+            return res.status(403).json({ message: "User doesn't have this appointment!" });
+        }
+
+        await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true });
+
+        // Release the doctor slot
+        const { docId, slotDate, slotTime } = appointmentData;
+        const docData = await DoctorModel.findById(docId);
+        if (!docData) {
+            return res.status(404).json({ message: "Doctor not found!" });
+        }
+
+        // Update slots_booked
+        let slots_booked = docData.slots_booked || {};
+        if (slots_booked[slotDate]) {
+            slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime);
+        }
+
+        // Save the updated slots back to the doctor data
+        docData.slots_booked = slots_booked;
+        await docData.save();
+
+        return res.json({ message: "Appointment cancelled!" });
+
+    } catch (error) {
+        return res.status(400).json({ Error: error.message });
+    }
+});
+
 
 //Payment  : 11:40:00
 

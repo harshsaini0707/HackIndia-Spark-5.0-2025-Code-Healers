@@ -120,7 +120,10 @@ adminRouter.patch("/admin/cancelAppointment/:appointmentId" ,adminMiddlewareRout
      const {docId , slotDate , slotTime} = appointmentData;
      const docData = await DoctorModel.findById(docId);
      let slots_booked = docData.slots_booked;
-     slots_booked[slotDate] = slots_booked[slotDate].filter( e => e !== slotTime )
+     
+     if (slots_booked[slotDate]) {
+      slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime);
+    }
 
      await DoctorModel.findByIdAndUpdate(docId , {slots_booked})
 

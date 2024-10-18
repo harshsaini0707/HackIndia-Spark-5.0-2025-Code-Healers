@@ -3,7 +3,6 @@ const {mongoose} = require("mongoose");
 const appointmentSchema = new mongoose.Schema({
     userId:{
         type:String,
-        required: true,
     },
     docId:{
         type:String,
@@ -19,7 +18,7 @@ const appointmentSchema = new mongoose.Schema({
     },
     userData:{
         type:Object,
-        required:true
+        
     },
     docData:{
         type:Object,

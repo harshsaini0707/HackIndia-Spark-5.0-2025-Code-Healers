@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
-const {jwt} = require("jsonwebtoken");
-const {bcrypt} =  require("bcrypt");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+
 
 const doctorSchema = new mongoose.Schema(
   {
@@ -72,8 +73,10 @@ const doctorSchema = new mongoose.Schema(
 doctorSchema.methods.validatePassword =  async function(inputPassword){
   const doctor =  this;
   const hashPassword = doctor.password;
-  const validate =  await bcrypt.compare(inputPassword , hashPassword);
+  const validate =  await bcrypt.compare(inputPassword,hashPassword);
   return validate;
+      
+
 }
 
 doctorSchema.methods.getJWT =  async function(){
