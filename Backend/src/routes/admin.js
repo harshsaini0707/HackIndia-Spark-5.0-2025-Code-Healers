@@ -8,6 +8,7 @@ const {adminMiddlewareRouter} = require("../../middlewares/adminMiddleware")
 const {appointmentModel} =  require("../../models/appontment")
 const {UserModel} =  require("../../models/user")
 
+//login
 adminRouter.post("/admin/login"  , async (req, res) =>{
     try {
         const {email , password } =  req.body;
