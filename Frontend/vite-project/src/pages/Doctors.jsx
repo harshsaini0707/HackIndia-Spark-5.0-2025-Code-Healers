@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext';
 
+
 export const Doctors = () => {
   const { speciality } = useParams();
   const { doctors } = useContext(AppContext);
@@ -48,6 +49,7 @@ export const Doctors = () => {
           ))}
         </div>
       </div>
+     
     </div>
   );
 };
