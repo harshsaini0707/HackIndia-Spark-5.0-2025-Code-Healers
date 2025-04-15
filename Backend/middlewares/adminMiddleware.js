@@ -8,7 +8,7 @@ try {
     
     
     const token  = cookie?.adminToken;
-    if(!token) return res.status(400).json({message : "Request Denied!! Token is Valid!!"})
+    if(!token) return res.status(400).json({message : "Request Denied!! Token is Invalid!!"})
     
     const decoded =  await jwt.verify(token , process.env.JWT_SECRET_KEY );
     if(!decoded)  return res.status(400).json({message : "Something wrong in token verification!!"})

@@ -8,10 +8,13 @@ const{adminRouter}  =  require("./routes/admin");
 const cookieParser =  require("cookie-parser");
 const { doctorRouter } = require('./routes/doctor');
 const {userRouter} = require("../src/routes/user")
-
+const cors = require("cors");
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({
+    origin:["http://localhost:5188" , "http://localhost:5173"]
+}))
 
 connectCloudinary().catch(error => {
     console.error(`Cloudinary connection error: ${error}`);

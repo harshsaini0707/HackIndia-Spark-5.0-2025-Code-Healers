@@ -4,7 +4,7 @@ import { doctors } from "../assets/assets/assets";
 export const AppContext =createContext();
 
 const AppContextProvider =(props)=>{ //what we will add in value object we can access it to any component
-
+    
     const currenySymbol = "$";
     const value ={
         doctors,

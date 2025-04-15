@@ -21,10 +21,10 @@ adminRouter.post("/admin/login"  , async (req, res) =>{
             secure: process.env.NODE_ENV === "production", // Use secure cookies in production
         }); 
 
-        return res.status(200).json({success: true , message : "Login Sucessfull!!"})
+        return res.status(200).json({success: true , message : "Login Sucessfull!!" , token})
 
         }else{
-            return res.status(404).json({message: "Invalid Credentials!!"})
+            return res.json({message: "Invalid Credentials!!"})
         }
         
     } catch (error) {
