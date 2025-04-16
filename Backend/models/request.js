@@ -11,16 +11,28 @@ const requestSchema = new mongoose.Schema({
         required:true
     },
     Required_donation:{
-        type:String
+        type:String,
+        required:true
     },
     status:{
         type:String,
-        enum:{
-            values:["pending","fullfilled"],
+        enum: {
+            values: ["pending", "fulfilled"],
             message: "Status must be either 'pending' or 'fulfilled'"
-        },
+          }
+          ,
         default:"pending"
-    }
+    },
+    createdAt:{
+        type: Date,
+        default : Date.now
+
+    },
+    fulfilledBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "UserModel"
+      }
+      
 
 },{timestamps:true});
 
