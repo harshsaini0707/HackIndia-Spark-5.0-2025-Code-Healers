@@ -8,6 +8,7 @@ const{adminRouter}  =  require("./routes/admin");
 const cookieParser =  require("cookie-parser");
 const { doctorRouter } = require('./routes/doctor');
 const {userRouter} = require("../src/routes/user")
+const {RequestRouter} = require ("./routes/Request")
 const cors = require("cors");
 
 app.use(express.json());
@@ -25,6 +26,7 @@ connectCloudinary().catch(error => {
 app.use("/",adminRouter);
 app.use("/" , doctorRouter);
 app.use("/",userRouter);
+app.use("/",RequestRouter);
 
 
 
