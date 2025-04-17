@@ -59,11 +59,13 @@ A powerful AI chatbot integrated into the system to provide round-the-clock help
 ```bash
 # Clone the repository
 git clone https://github.com/harshsaini0707/Hospital-Management-System.git
-cd Hospital-Management-System
+cd HackIndia-Spark-5.0-2025-Code-Healers
 
 
 # Install client dependencies
 cd User
+npm install
+cd admin
 npm install
 
 # Install server dependencies
