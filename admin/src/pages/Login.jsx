@@ -14,7 +14,9 @@ const Login = () => {
 
     try {
      if(state === "Admin"){
-      const {data} =  await axios.post(import.meta.env.VITE_BASE_URL+"/admin/login",{email,password});
+      const {data} =  await axios.post("http://localhost:8989"+"/admin/login",{email,password},{
+        withCredentials:true
+      });
       console.log(data);
       
       if(data.success){
@@ -26,10 +28,9 @@ const Login = () => {
       }else{
         toast.error(data.message)
       }
-     } else{
-
-     }
+     } 
     } catch (error) {
+      console.log(error);
       
     }
    }

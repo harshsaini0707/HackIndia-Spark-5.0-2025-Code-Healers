@@ -9,7 +9,7 @@ const {appointmentModel} =  require("../../models/appontment")
 const {UserModel} =  require("../../models/user")
 
 //login thisia test
-adminRouter.post("/admin/login"  ,adminMiddlewareRouter, async (req, res) =>{
+adminRouter.post("/admin/login", async (req, res) =>{
     try {
         const {email , password } =  req.body;
         if(email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD){
