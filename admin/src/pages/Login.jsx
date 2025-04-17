@@ -14,7 +14,7 @@ const Login = () => {
 
     try {
      if(state === "Admin"){
-      const {data} =  await axios.post(VITE_BASE_URL+"/admin/login",{email,password});
+      const {data} =  await axios.post(import.meta.env.VITE_BASE_URL+"/admin/login",{email,password});
       console.log(data);
       
       if(data.success){

@@ -1,2 +1,10 @@
 @import "tailwindcss";
 
+ 
+.active hr{
+    @apply block 
+}
+/* for scroll show in specialist */
+::-webkit-scrollbar{
+    @apply hidden
+}

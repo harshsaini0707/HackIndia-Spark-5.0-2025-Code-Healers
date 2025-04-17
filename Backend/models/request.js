@@ -31,6 +31,12 @@ const requestSchema = new mongoose.Schema({
     fulfilledBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "UserModel"
+      },
+      laocationOf:{
+        type : String
+      },
+      mobile:{
+        type:number
       }
       
 
