@@ -1,9 +1,9 @@
 import React from 'react'
 import {Routes,  Route} from 'react-router-dom'
 import Home from './pages/Home'
-import Navbar from './components/Navbar'
+
 import Login from './pages/Login'
-import Chatbot from './pages/Chatbot'
+
 import Doctors from './pages/Doctors'
 import DoctorInfo from './pages/DoctorInfo'
 import Profile from './pages/user/Profile'
