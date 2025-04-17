@@ -49,6 +49,7 @@ adminRouter.post("/admin/add-doctor",adminMiddlewareRouter, async (req, res) => 
       fees,
       address,
       slots_booked,
+      
     } = req.body;
 
     //validate data
@@ -74,7 +75,7 @@ adminRouter.post("/admin/add-doctor",adminMiddlewareRouter, async (req, res) => 
       about,
       available,
       fees,
-      address: typeof address === 'string' ? JSON.parse(address) : address,
+      address,
       slots_booked: typeof slots_booked === 'string' ? JSON.parse(slots_booked) : slots_booked,
     });
 
@@ -87,7 +88,7 @@ adminRouter.post("/admin/add-doctor",adminMiddlewareRouter, async (req, res) => 
 
 adminRouter.get("/admin/allDoctors" ,adminMiddlewareRouter, async(req,res) =>{
     try {
-   const doctor =  await DoctorModel.find({}).select("-password  -image");
+   const doctor =  await DoctorModel.find({}).select("-password ");
    if(!doctor) return res.status(400).json({message : "No Doctor Available !!"})
     return res.status(200).json({message:"List All Doctors" , doctor})
         

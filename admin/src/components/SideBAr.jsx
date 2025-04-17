@@ -8,13 +8,7 @@ const SideBAr = () => {
     <div className='min-h-screen  bg-white border-r'>
         {
             aToken && <ul className='text-[#515151] mt-1'>
-                <NavLink className="flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer  focus:bg-blue-100 focus:border-r-4 focus:border-r-blue-700  " to={"/admin-dashboard"}>
-            <p>Dashboard</p>
-                </NavLink>
-
-                <NavLink className="flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer  focus:bg-blue-100  focus:border-r-4 focus:border-r-blue-700  " to={"/all-appointment"}>
-            <p>Appointments</p>
-                </NavLink>
+            
 
                 <NavLink className="flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer  focus:bg-blue-100 focus:border-r-4 focus:border-r-blue-700  "  to={"/add-doctor"}>
             <p>Add Doctor </p>

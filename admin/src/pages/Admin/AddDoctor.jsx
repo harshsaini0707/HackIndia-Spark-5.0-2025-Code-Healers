@@ -1,87 +1,114 @@
-import React, { useState, useContext } from 'react';
-import { DoctorContext } from '../../context/DoctorContext'; // Import the context
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const AddDoctor = () => {
-  const { addDoctor } = useContext(DoctorContext); // Get the addDoctor function from context
-
-  // State variables for form inputs
-  const [name, setName] = useState('');
+  const [firstName, setfirstName] = useState('');
+  const [secondName, setsecondName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [experience, setExperience] = useState(1);
-  const [fees, setFees] = useState('');
+  const [experience, setExperience] = useState('');
+  const [fees, setFees] = useState(0);
   const [speciality, setSpeciality] = useState('General physician');
   const [education, setEducation] = useState('');
   const [address, setAddress] = useState('');
   const [about, setAbout] = useState('');
-  const [image, setImage] = useState(false);
+  const [image, setImage] = useState('');
 
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();  // Prevent the page from refreshing on submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    // Create a new doctor object with the form values
-    const newDoctor = {
-      name,
-      email,
-      password,
-      experience,
-      fees,
-      speciality,
-      education,
-      address,
-      about,
-      image,
-    };
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_URL}/admin/add-doctor`, {
+        firstName,
+        lastName: secondName,
+        email,
+        password,
+        image,
+        available:true,
+        speciality,
+        degree: education,
+        experience,
+        about,
+        fees,
+        address,
+      }, { withCredentials: true });
 
-    // Add the new doctor using the addDoctor function from context
-    addDoctor(newDoctor);
+      console.log(response.data);
 
-    // Clear the form after submission
-    setName('');
-    setEmail('');
-    setPassword('');
-    setExperience(1);
-    setFees('');
-    setSpeciality('General physician');
-    setEducation('');
-    setAddress('');
-    setAbout('');
-    setImage(false);
+
+      setfirstName('');
+      setsecondName('');
+      setEmail('');
+      setPassword('');
+      setExperience('');
+      setFees(0);
+      setSpeciality('General physician');
+      setEducation('');
+      setAddress('');
+      setAbout('');
+      setImage('');
+
+      alert("Doctor added successfully!");
+
+    } catch (error) {
+      console.error("Error adding doctor:", error);
+      alert("Failed to add doctor.");
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className='p-5 w-full'>
       <p className='mb-4 text-2xl font-semibold text-gray-700'>Add Doctor</p>
       <div className='bg-white px-6 py-8 border rounded-xl w-full max-w-4xl max-h-[80vh] overflow-y-auto shadow-sm'>
-
         <div className='flex items-center gap-4 mb-8 text-gray-600'>
           <label htmlFor="doc-img">
-            <img className='w-16 h-16 bg-gray-100 rounded-full object-cover cursor-pointer' src={image || ''} alt="Upload" />
+          {image ? (
+  <img
+    className='w-16 h-16 bg-gray-100 rounded-full object-cover cursor-pointer'
+    src={image}
+    alt="Doctor"
+  />
+) : (
+  <div className='w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-gray-400'>
+    ?
+  </div>
+)}
+
           </label>
           <input
-            type="file"
+            type="text"
             id="doc-img"
-            hidden
-            onChange={(e) => setImage(URL.createObjectURL(e.target.files[0]))} // Update the image state
+            className='outline-1'
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
           />
-          <p className='text-sm'>Upload doctor <br /> picture</p>
+          <p className='text-sm'>Upload doctor <br /> picture URL</p>
         </div>
 
         <div className='flex flex-col lg:flex-row gap-8 text-gray-700'>
           <div className='flex flex-col gap-4 w-full lg:w-1/2'>
             <div>
-              <p className='mb-1'>Doctor Name</p>
+              <p className='mb-1'>Doctor FirstName</p>
               <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={firstName}
+                onChange={(e) => setfirstName(e.target.value)}
                 className='border rounded px-3 py-2 w-full'
                 type="text"
                 required
-                placeholder='Name'
+                placeholder='First Name'
               />
             </div>
-
+            <div>
+              <p className='mb-1'>Doctor LastName</p>
+              <input
+                value={secondName}
+                onChange={(e) => setsecondName(e.target.value)}
+                className='border rounded px-3 py-2 w-full'
+                type="text"
+                required
+                placeholder='Last Name'
+              />
+            </div>
             <div>
               <p className='mb-1'>Doctor Email</p>
               <input
@@ -93,7 +120,6 @@ const AddDoctor = () => {
                 placeholder='Email'
               />
             </div>
-
             <div>
               <p className='mb-1'>Doctor Password</p>
               <input
@@ -105,7 +131,6 @@ const AddDoctor = () => {
                 placeholder='Password'
               />
             </div>
-
             <div>
               <p className='mb-1'>Experience (in years)</p>
               <input
@@ -117,7 +142,6 @@ const AddDoctor = () => {
                 placeholder='Experience'
               />
             </div>
-
             <div>
               <p className='mb-1'>Fees</p>
               <input
@@ -148,7 +172,6 @@ const AddDoctor = () => {
                 <option value="Gastroenterologist">Gastroenterologist</option>
               </select>
             </div>
-
             <div>
               <p className='mb-1'>Education</p>
               <input
@@ -160,7 +183,6 @@ const AddDoctor = () => {
                 placeholder='Education'
               />
             </div>
-
             <div>
               <p className='mb-1'>Address</p>
               <input
@@ -172,7 +194,6 @@ const AddDoctor = () => {
                 placeholder='Address'
               />
             </div>
-
             <div>
               <p className='mb-1'>About Doctor</p>
               <textarea
@@ -184,7 +205,6 @@ const AddDoctor = () => {
                 placeholder='Write about doctor...'
               />
             </div>
-
             <button type="submit" className='bg-blue-500 hover:bg-blue-600 transition text-white py-2 rounded-full mt-2'>
               Add Doctor
             </button>

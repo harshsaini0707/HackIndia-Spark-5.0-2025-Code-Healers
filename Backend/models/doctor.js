@@ -54,7 +54,7 @@ const doctorSchema = new mongoose.Schema(
       default: 300,
     },
     address: {
-      type: Object,
+      type: String,
       required: true,
     },
     slots_booked: {
@@ -64,7 +64,7 @@ const doctorSchema = new mongoose.Schema(
     image: {
       type: String,
       required: true,
-      default: " https://imgs.search.brave.com/O-MGwjr8gqKlSxBw7rYt7oXByLveLK-_BjfCRnRHUKE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMucm9ja2V0cmVh/Y2guY28vaW1hZ2Vz/L3Byb2ZpbGVfcGlj/cy92Mi4xL2RwcG03/LnBuZw"
+      default: "https://imgs.search.brave.com/O-MGwjr8gqKlSxBw7rYt7oXByLveLK-_BjfCRnRHUKE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMucm9ja2V0cmVh/Y2guY28vaW1hZ2Vz/L3Byb2ZpbGVfcGlj/cy92Mi4xL2RwcG03/LnBuZw"
     },
   },
   { timestamps: true }

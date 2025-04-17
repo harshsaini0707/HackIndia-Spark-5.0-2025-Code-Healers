@@ -3,17 +3,34 @@ import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
 const DoctorList = () => {
-  // const { doctors } = useContext(DoctorContext);
+ 
 
-  // const [availability, setAvailability] = useState({});
+  const [doctor, setDoctor] = useState([]);
 
+  
+
+  // const changeAvailabilty = async (docId) =>{
+  //   try {
+  //     const response = await axios.post(`${import.meta.env.VITE_URL}/admin/changeAvailability/${docId}`,{
+
+  //     },{withCredentials:true})
+  //     console.log(response);
+      
+      
+  //   } catch (error) {
+  //     console.log(error);
+      
+  //   }
+  // }
 
   const getData = async () => {
     try {
-      const response = await axios.get("http://localhost:8989"+"/admin/allDoctors",{
+      const response = await axios.get(import.meta.env.VITE_URL+"/admin/allDoctors",{
         withCredentials:true
       });
-     console.log(response.data)
+     console.log(response?.data?.doctor)
+     setDoctor(response?.data?.doctor);
+
         
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -27,57 +44,32 @@ const DoctorList = () => {
 // const doctors =["he"];
 
   return (
-    // <div
-    //   style={{
-    //     border: '2px solid #ccc',
-    //     borderRadius: '12px',
-    //     padding: '20px',
-    //     backgroundColor: '#f4f4f4',
-    //     marginTop: '20px',
-    //   }}
-    // >
-    //   <h2 style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#333', marginBottom: '20px' }}>
-    //     Doctor List
-    //   </h2>
-    //   {doctors.length === 0 ? (
-    //     <p style={{ fontSize: '1.2rem', color: '#888' }}>No doctors added yet.</p>
-    //   ) : (
-    //     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
-    //       {/* {do.map((doctor) => (
-    //         <div
-    //           key={doctor.id}
-    //           style={{
-    //             border: '1px solid #ddd',
-    //             borderRadius: '12px',
-    //             padding: '16px',
-    //             boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-    //             backgroundColor: '#fff',
-    //           }}
-    //         >
-    //           <p><strong>Name:</strong> {doctor.name}</p>
-    //           <p><strong>Email:</strong> {doctor.email}</p>
-    //           <p><strong>Experience:</strong> {doctor.experience} years</p>
-    //           <p><strong>Fees:</strong> ₹{doctor.fees}</p>
-    //           <div>
-    //             <strong>Availability:</strong>
-    //             <div>
-    //               <label style={{ display: 'inline-flex', alignItems: 'center' }}>
-    //                 <input
-    //                   type="checkbox"
-    //                   checked={availability[doctor.id] || false}
-    //                   onChange={() => handleAvailabilityChange(doctor.id)}
-    //                   style={{ marginRight: '8px' }}
-    //                 />
-    //                 Available
-    //               </label>
-    //             </div>
-    //           </div>
-    //         </div>
-    //       ))} */}
-    //     </div>
-    //   )}
-    // </div>
-    <div></div>
+    <div className="p-6 mt-6  rounded-lg ">
+    <h2 className="text-2xl font-bold text-gray-800 mb-6">Doctor List</h2>
+
+    {doctor.length === 0 ? (
+      <p className="text-lg text-gray-500">No doctors added yet.</p>
+    ) : (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {doctor.map((ele) => (
+          <div
+            key={ele._id}
+            className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition duration-200"
+          >
+            <img src={ele?.image} className='h-52 w-52 rounded-lg' />
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              Dr. {ele?.firstName} {ele?.lastName}
+            </h3>
+          <p>{ele?.speciality}</p>
+        <div className='flex gap-2 mt-2'>
+        <input  type="checkbox" /><span>Availabe</span>
+        </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+   
   );
 };
 
