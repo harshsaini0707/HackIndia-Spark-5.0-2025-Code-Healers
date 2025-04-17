@@ -10,7 +10,7 @@ const DoctorList = () => {
 
   const getData = async () => {
     try {
-      const response = await axios.get(import.meta.env.VITE_BASE_URL+"/admin/allDoctors",{
+      const response = await axios.get("http://localhost:8989"+"/admin/allDoctors",{
         withCredentials:true
       });
      console.log(response.data)
