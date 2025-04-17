@@ -1,8 +1,21 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import axios from "axios"
 
 function Navbar() {
   const navigate = useNavigate();
+
+  const LogOut = async()=>{
+    try {
+      await axios.post(import.meta.env.VITE_URL+"/user/logout",{},{
+        withCredentials:true
+      })
+      
+    } catch (error) {
+      console.log(error);
+      navigate("/login")
+    }
+  }
 
   return (
     <div className='flex items-center justify-between text-sm py-10 mb-5 h-16 border-b border-gray-400 px-4 md:px-10'>
@@ -25,14 +38,14 @@ function Navbar() {
         <NavLink to='/about' className={({ isActive }) => isActive ? 'text-primary' : ''}>
           <li className='py-2 hover:text-primary'>ABOUT</li>
         </NavLink>
-        <NavLink to='/contact' className={({ isActive }) => isActive ? 'text-primary' : ''}>
-          <li className='py-2 hover:text-primary'>CONTACT</li>
+        <NavLink to='/donation' className={({ isActive }) => isActive ? 'text-primary' : ''}>
+          <li className='py-2 hover:text-primary'>Donation</li>
         </NavLink>
       </ul>
 
       {/* Profile Section - Static */}
       <div className='relative cursor-pointer group hidden md:block'>
-        <img
+        <img 
           className='w-10 h-10 rounded-full object-cover border'
           src='https://cdn-icons-png.flaticon.com/512/194/194938.png'
           alt='User'
@@ -43,10 +56,10 @@ function Navbar() {
           <p onClick={() => navigate("/my-profile")} className='cursor-pointer hover:text-black'>
             My Profile
           </p>
-          <p onClick={() => navigate("/my-appointments")} className='cursor-pointer hover:text-black'>
+          <p onClick={() => navigate("/my-appointment")} className='cursor-pointer hover:text-black'>
             My Appointments
           </p>
-          <p onClick={() => navigate("/login")} className='cursor-pointer hover:text-black'>
+          <p onClick={LogOut} className='cursor-pointer hover:text-black'>
             Logout
           </p>
         </div>

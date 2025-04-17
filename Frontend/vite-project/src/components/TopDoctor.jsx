@@ -1,38 +1,96 @@
-import React, { useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AppContext } from '../context/AppContext'
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { User, Stethoscope, Clock, Info, IndianRupee } from 'lucide-react';
 
-const TopDoctor = () => {
-    const navigate = useNavigate();
-    //instead of import doctor we use context
-    const {doctors} = useContext(AppContext);
+const DoctorInfo = () => {
+  const { Id } = useParams();
+  const [doctor, setDoctor] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const docInfo = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_URL}/user/doctor/${Id}`, {
+        withCredentials: true,
+      });
+      setDoctor(response?.data?.doctorProfile || null);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    docInfo();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      </div>
+    );
+  }
+
+  if (!doctor) {
+    return (
+      <div className="text-center mt-20 text-gray-600">
+        Doctor not found or something went wrong.
+      </div>
+    );
+  }
 
   return (
-    <div className='flex flex-col items-center gap-4 my-16 text-gray-900 md:mx-10 '>
-        <h1 className='text-3xl font-medium'>Top Doctors to Book</h1>
-        <p className='sm:w-1/3 text-center text-sm'>Simply browse through our extensive list of trusted doctors.</p>
-        <div className='w-full grid grid-cols-auto gap-4 pt-5 gap-y-6 px-3 sm:px-0'>
-            {
-                doctors.slice(0,10).map((item , index)=>(
-                    <div  onClick={()=>navigate(`/appointment/${item._id}`)}className='border border-blue-200 rounded-xl overflow-hidden cursor-pointer hover:scale-105 hover:shadow-lg transition-transform duration-200 ease-in' key={index}>
-                        <img className=' bg-blue-50 ' src={item.image} alt="" />
-                        <div className=' p-4 '>
-                        <div className='flex items-center gap-2 text-sm text-center text-green-500'>
-                            <p className='w-2 h-2 bg-green-500 rounded-full'></p><p>Avaiable</p>
-                           </div>
-                                <p className='text-gray-900 text-lg font-medium '>{item.name}</p>
-                                <p className='text-gray-700 text-sm' >{item.speciality}</p>
-                            </div>
-                        </div>
-                   
-
-
-                ))
-            }
+    <div className="min-h-screen bg-gradient-to-br from-red-50 to-white py-20 px-6 md:px-12 lg:px-32">
+      <div className="bg-white rounded-2xl shadow-md border border-gray-100 flex flex-col md:flex-row overflow-hidden">
+        {/* Doctor Image */}
+        <div className="md:w-1/2">
+          <img
+            src={doctor.image || '/api/placeholder/400x400'}
+            alt={`Dr. ${doctor.firstName} ${doctor.lastName}`}
+            className="w-full h-full object-cover"
+          />
         </div>
-        <button onClick={()=>{navigate("/doctors");scrollTo(0,0)}} className='bg-blue-50 text-gray-500 px-12 py-3 rounded-full  mt-10'>more...</button>
-    </div>
-  )
-}
 
-export default TopDoctor
+        {/* Doctor Info */}
+        <div className="md:w-1/2 p-6 md:p-10 space-y-4">
+          <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+            <User className="text-indigo-600" size={24} />
+            Dr. {doctor.firstName} {doctor.lastName}
+          </h2>
+
+          <p className="text-lg text-gray-600 flex items-center gap-2">
+            <Stethoscope size={18} className="text-indigo-500" />
+            {doctor.speciality}
+          </p>
+
+          {doctor.experience && (
+            <p className="text-lg text-gray-600 flex items-center gap-2">
+              <Clock size={18} className="text-indigo-500" />
+              {doctor.experience} years experience
+            </p>
+          )}
+
+          {doctor.about && (
+            <p className="text-gray-700 flex items-start gap-2">
+              <Info className="text-indigo-500 mt-1" size={18} />
+              <span>
+                <strong>About:</strong> {doctor.about}
+              </span>
+            </p>
+          )}
+
+          {doctor.fees && (
+            <p className="text-lg text-gray-700 flex items-center gap-2">
+              <IndianRupee size={18} className="text-green-600" />
+              <strong>Fees:</strong> ₹{doctor.fees}
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DoctorInfo;

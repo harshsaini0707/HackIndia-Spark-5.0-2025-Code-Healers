@@ -38,14 +38,14 @@ userRouter.post("/user/login" , async(req,res) =>{
         
         const{email , password} = req.body;
         
-        if(!validator.isEmail(email))  return res.status(404).json({message: "Invalid Email type"}) 
-        if(password.length< 3) return  res.status(404).json({message: "make Strong Password"})
+        //if(!validator.isEmail(email))  return res.status(404).json({message: "Invalid Email type"}) 
+        //if(password.length< 3) return  res.status(404).json({message: "make Strong Password"})
 
         const user = await UserModel.findOne({email : email})
-        if(!user)  return res.status(404).json({ERROR : "Invalid Credential!!"})
+        
         
         const validate = await user.validatePassword(password);
-        if(!validate)   return res.status(404).json({ERROR : "Invalid Credential!!"})
+        if(!validate || !user)   return res.status(404).json({ERROR : "Invalid Credential!!"})
         
         else{
             const token = await user.getJWT();
@@ -69,6 +69,32 @@ userRouter.post("/user/logout" , userAuthMiddlware , async (req,res) =>{
         return res.status(400).json({Error : error.message}) 
     }
 })
+
+userRouter.get("/user/allDoctors" ,userAuthMiddlware, async(req,res) =>{
+    try {
+   const doctor =  await DoctorModel.find({}).select("-password ");
+   if(!doctor) return res.status(400).json({message : "No Doctor Available !!"})
+    return res.status(200).json({message:"List All Doctors" , doctor})
+        
+    } catch (error) {
+        return res.status(400).json({ERROR: error.message})
+    }
+})
+
+userRouter.get("/user/doctor/:Id" ,  userAuthMiddlware , async(req ,res)=>{
+    try {
+        
+       const docId = req.params.Id;
+        const doctorProfile =  await DoctorModel.findById(docId).select("-password");
+        
+        return res.json({doctorProfile})
+
+    } catch (error) {
+        return res.json({ERROR : error.message})
+
+    }
+})
+
 
 userRouter.patch("/user/editProfile" , userAuthMiddlware , async (req,res)=>{
     try {
