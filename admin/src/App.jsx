@@ -27,7 +27,7 @@ function App() {
         <Route path="/admin-dashboard" element={<DashBoard/>} />
         <Route path="/add-doctor" element={<AddDoctor/>} />
         <Route path="/all-appointment" element={<Appointment/>} />
-        <Route path="/doctor-list" element={<DocList/>} />
+        <Route path="/doctor-list" element={<DocList />} />
       </Routes>
     </div>
    </div>
