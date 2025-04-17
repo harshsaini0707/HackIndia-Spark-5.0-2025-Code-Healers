@@ -2,7 +2,7 @@ const express = require("express");
 const adminRouter = express.Router();
 const bcrypt = require("bcrypt");
 const { DoctorModel } = require("../../models/doctor");
-const {vlaidateDoctorAddData} =  require("../../utils/validation")
+const {validateDoctorAddData} =  require("../../utils/validation")
 const jwt = require("jsonwebtoken")
 const {adminMiddlewareRouter} = require("../../middlewares/adminMiddleware")
 const {appointmentModel} =  require("../../models/appontment")
@@ -52,10 +52,11 @@ adminRouter.post("/admin/add-doctor",adminMiddlewareRouter, async (req, res) => 
     } = req.body;
 
     //validate data
-    const validationErrors = vlaidateDoctorAddData(req);
-    if (!validationErrors) {
-    return res.status(400).json({ ERROR: validationErrors });
+    const validationErrors = validateDoctorAddData(req); 
+    if (validationErrors) {
+      return res.status(400).json({ ERROR: validationErrors });
     }
+    
 
 
     //hash password
