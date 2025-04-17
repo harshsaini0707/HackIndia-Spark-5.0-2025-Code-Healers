@@ -78,9 +78,9 @@ adminRouter.post("/admin/add-doctor",adminMiddlewareRouter, async (req, res) => 
     });
 
     await doctorData.save();
-    return res.status(200).json({message :  "Doctor Added Successfully!!" , doctorData})
+    return res.status(200).json({message :  "Doctor Added Successfully!!" , data : doctorData})
   } catch (error) {
-    return res.status(400).json({ERROR: error.message})
+    return res.status(500).json({ERROR: error.message})
   }
 });
 

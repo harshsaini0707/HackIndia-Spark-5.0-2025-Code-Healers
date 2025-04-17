@@ -1,6 +1,7 @@
 const express = require("express");
 const { userAuthMiddlware } = require("../../middlewares/userMiddleware");
-const { RequestModel } = require("../../models/request");
+const {RequestModel} = require("../../models/request")
+const { UserModel } = require("../../models/user");
 const RequestRouter = express.Router();
 
 
@@ -49,50 +50,8 @@ RequestRouter.post("/madeRequest", userAuthMiddlware, async (req, res) => {
   });
   
 
-  const { RequestModel } = require("../models/RequestModel");
-  const { UserModel } = require("../models/UserModel"); // Make sure to import UserModel
   
-  RequestRouter.put("/fulfillRequest/:id", userAuthMiddlware, async (req, res) => {
-    try {
-      if (!req.user || !req.user._id) {
-        return res.status(401).json({ message: "Unauthorized. Please login!" });
-      }
-  
-      const requestId = req.params.id;
-  
-      const request = await RequestModel.findById(requestId);
-      if (!request) {
-        return res.status(404).json({ message: "Request not found" });
-      }
-  
-      if (request.status === "fulfilled") {
-        return res.status(400).json({ message: "Request already fulfilled" });
-      }
-  
-      if (request.RequestedBy.toString() === req.user._id.toString()) {
-        return res.status(400).json({ message: "You cannot fulfill your own request" });
-      }
-  
-    
-      request.status = "fulfilled";
-      request.fulfilledBy = req.user._id;
-      await request.save();
-  
-    
-      const donor = await UserModel.findById(req.user._id).select("firstName lastName email mobile address");
-  
-      return res.status(200).json({
-        message: "Request fulfilled successfully",
-        data: {
-          ...request.toObject(),
-          donorInfo: donor
-        }
-      });
-  
-    } catch (error) {
-      return res.status(500).json({ message: "Server Error", error: error.message });
-    }
-  });
+ 
   RequestRouter.put("/fulfillRequest/:id", userAuthMiddlware, async (req, res) => {
     try {
       if (!req.user || !req.user._id) {
