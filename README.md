@@ -1,30 +1,30 @@
-# 🏥 SmartCare - Intelligent Healthcare Management System
+# SmartCare - Intelligent Healthcare Management System
 
 SmartCare is a full-stack healthcare management platform designed to streamline doctor appointments, organ/blood donation requests, user profile management, and AI-based healthcare assistance. The system includes dedicated portals for users, doctors, and admins, making it a comprehensive and scalable medical support solution.
 
 ---
 
-## 🚀 Features
+##  Features
 
-### 👤 User Panel
-- 📅 Book appointments with doctors
-- 📋 View and manage appointment history
-- ✏️ Edit and update profile details
-- ❤️ Request organ or blood donation
-- 🤖 24/7 AI HealthCare Chatbot assistance
+###  User Panel
+-  Book appointments with doctors
+-  View and manage appointment history
+-  Edit and update profile details
+-  Request organ or blood donation
+-  24/7 AI HealthCare Chatbot assistance
 
-### 🩺 Doctor Panel
-- 👨‍⚕️ Manage patient appointments
-- 📄 View user details and medical history
-- 📝 Update consultation status
+###  Doctor Panel
+-  Manage patient appointments
+-  View user details and medical history
+-  Update consultation status
 
-### 🛠️ Admin Panel
-- ➕ Add and manage doctors
-- 🔍 Monitor system activity and user requests
+###  Admin Panel
+-  Add and manage doctors
+-  Monitor system activity and user requests
 
 ---
 
-## 🧠 AI HealthCare Chatbot
+##  AI HealthCare Chatbot
 A powerful AI chatbot integrated into the system to provide round-the-clock help for users regarding:
 - Symptoms
 - First-aid suggestions
@@ -33,7 +33,7 @@ A powerful AI chatbot integrated into the system to provide round-the-clock help
 
 ---
 
-## 🏗️ Tech Stack
+##  Tech Stack
 
 ### Frontend
 - React.js
@@ -54,7 +54,7 @@ A powerful AI chatbot integrated into the system to provide round-the-clock help
 
 ---
 
-## 🛠️ Installation
+##  Installation
 
 ```bash
 # Clone the repository
